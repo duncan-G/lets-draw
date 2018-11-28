@@ -1,9 +1,7 @@
-const path = require('path');
-require('dotenv').config({
-  path: path.join(__dirname + '/../.env.local')
-});
+require('../config/env');
 const express = require('express');
 const logger = require('morgan');
+const path = require('path');
 
 const sessions = require('client-sessions');
 const passport = require('passport');
