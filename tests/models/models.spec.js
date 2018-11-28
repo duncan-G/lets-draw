@@ -1,5 +1,4 @@
 const { db, User } = require('../../server/models');
-const logger = require('../../config/logger');
 const chalk = require('chalk');
 
 // User tests
@@ -59,7 +58,7 @@ describe('User model', () => {
   });
 
   it('should encrypt password before saving', async () => {
-    const password = user.password;
+    const password = user.password
     await user.save();
     expect(user.id).not.toBe(undefined);
     expect(user.password).not.toBe(password);
