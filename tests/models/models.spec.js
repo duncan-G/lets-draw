@@ -1,6 +1,10 @@
 const { db, User } = require('../../server/models');
 const logger = require('../../config/logger');
+<<<<<<< HEAD
 const chalk = require('chalk');
+=======
+const bcrypt = require('bcrypt');
+>>>>>>> 47d76af000b8a99a7dc6d1f4e37f8dbfe68a1e76
 
 // User tests
 describe('User model', () => {
@@ -11,8 +15,13 @@ describe('User model', () => {
   ];
 
   beforeEach(async () => {
+<<<<<<< HEAD
     await db.sync({ force: true });
   });
+=======
+    await db.sync({ force: true})
+  })
+>>>>>>> 47d76af000b8a99a7dc6d1f4e37f8dbfe68a1e76
 
   beforeEach(() => {
     user = new User({
@@ -59,7 +68,7 @@ describe('User model', () => {
   });
 
   it('should encrypt password before saving', async () => {
-    const password = user.password;
+    const password = user.password
     await user.save();
     expect(user.id).not.toBe(undefined);
     expect(user.password).not.toBe(password);
