@@ -1,12 +1,13 @@
 const { db, User } = require('../../server/models');
 const logger = require('../../config/logger');
+const bcrypt = require('bcrypt');
 
 // User tests
 describe('User model', () => {
   let user;
   const sequelizeErrors=['SequelizeValidationError', 'SequelizeUniqueConstraintError']
 
-  afterAll(async () => {
+  beforeEach(async () => {
     await db.sync({ force: true})
   })
 
@@ -52,9 +53,21 @@ describe('User model', () => {
   });
 
   it('should encrypt password before saving', async () => {
-    const password = user.password;
+    const password = user.password
     await user.save();
     expect(user.id).not.toBe(undefined);
     expect(user.password).not.toBe(password);
+  })
+
+  it('should invalidate incorrect password', async() => {
+    logger.error(user.email, user.password)
+    await user.save();
+    expect(user.validPassword('incorrect'))
+  })
+  it('should validate correct password', async() => {
+    const password = user.password;
+    await user.save();
+    expect(user.validPassword(password)).toBeTruthy();
+
   })
 });

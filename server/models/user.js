@@ -22,6 +22,10 @@ const User = db.define('user', {
   }
 });
 
+User.addHook('beforeSave', (user) => {
+  user.password = bcrypt.hashSync(user.password, 14);
+})
+
 User.prototype.validPassword = function(password) {
   return bcrypt.compareSync(password, this.password);
 }
