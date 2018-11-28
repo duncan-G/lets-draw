@@ -65,17 +65,17 @@ router.post('/register', async (req, res, next) => {
     });
 
     if (user) {
-      res.status(400).send('Email account already exists. Please log in');
+      res
+        .status(400)
+        .send(new ResponseMessage(null, 'Account already exists. Please log in'));
     }
-    let hash = bcrypt.hashSync(req.body.password, 14);
+    console.log('body', req.body);
 
     const newUser = await User.create({
       email: req.body.email,
-      password: hash
+      password: req.body.password
     });
-    res.user = newUser;
-    res.redirect('/login');
-    res.json(newUser);
+    res.json(new ResponseMessage(newUser));
   } catch (err) {
     next(err);
   }
@@ -88,5 +88,10 @@ router.post('/reset-token', (req, res, next) => {
 router.post('/reset-password', (req, res, next) => {
   res.send('yes');
 });
+
+function ResponseMessage(data, error) {
+  this.error = error || '';
+  this.data = data || '';
+}
 
 module.exports = router;

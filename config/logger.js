@@ -2,7 +2,7 @@
 
 const chalk = require('chalk');
 
-const divider = chalk.gray('\n-----------------------------------');
+const divider = chalk.gray('----------------------------------------------------------------------');
 
 /**
  * Logger middleware, you can customize it to make messages more personal
@@ -10,7 +10,9 @@ const divider = chalk.gray('\n-----------------------------------');
 const logger = {
   // Called whenever there's an error on the server we want to print
   error: (...err) => {
-    console.error(chalk.red(...err));
+    console.log(divider);
+    console.error(chalk.cyan(...err));
+    console.log(divider);
   },
 
   log: (...message) => {
