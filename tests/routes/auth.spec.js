@@ -1,7 +1,11 @@
 const supertest = require('supertest');
+const faker = require('faker');
+const httpMocks = require('node-mocks-http');
+
+const app = require('../../server/app');
 const logger = require('../../config/logger');
 const { User, db } = require('../../server/models');
-const app = require('../../server/app');
+const controllers = require('../../server/api/auth/controllers');
 
 describe('User routes', () => {
   const requests = supertest(app);
@@ -17,8 +21,12 @@ describe('User routes', () => {
     await User.create(user0);
   });
 
+  afterAll(async () => {
+    await db.sync({ force: true });
+  });
+
   describe('Register user', () => {
-    it('should save user0 before test suite', async () => {
+    it('should save user0 before test suite begins', async () => {
       const savedUser = await User.findOne({
         where: { email: user0.email }
       });
@@ -32,40 +40,98 @@ describe('User routes', () => {
         .expect(400)
         .expect('Content-Type', /json/)
         .then(response => {
-          console.log('bodyyyyyyyyyyyyyyyyyyyyyy', response.body.error);
           expect(response.body.error).toBe(
-            'Account already exists. Please log in'
+            'Account already exists. Please log in.'
           );
           expect(response.body.data).toBe('');
         });
     });
 
-    const successfullReq = requests.post('/api/auth/register').send({
+    // These errors do not include the errors that arise
+    // when the server is unavailable; therefore, we should
+    // expect the response to be JSON as it's more easily parsed
+    it('should gracefully handle server errors', async () => {
+      return requests.post('/api/auth/register')
+        .send('a string')
+        .expect(500)
+        .expect('Content-Type', /json/)
+        .then(response => {
+          const error = response.body
+          expect(Object.keys(error)).toContain('message');
+          expect(Object.keys(error)).toContain('type');
+          expect(typeof error.message).toBe('string')
+          expect(typeof error.type).toBe('string')
+        })
+    });
+
+    it('should login on successful register', () => {
+      /* Create mock, req, res and next */
+
+      const req = httpMocks.createRequest({
+        body: {
+          email: faker.internet.email(),
+          password: 'super1337'
+        }
+      });
+      // Mock fake passportJS login method
+      req.login = (_, callback) => {
+        callback(null)
+      }
+
+      const res = httpMocks.createResponse();
+
+      // Next throws an error or passes req and res to login function
+      const next = err => {
+        if (err) {
+          throw new Error(err);
+        }
+        controllers.handleSuccessfulLogin(req, res);
+      };
+
+      /* Make request */
+      return controllers.register(req, res, next)
+        .then(() => {
+          const response = res._getData();
+          expect(response.error).toBe('');
+          expect(response.data).toBe('Successfully logged in.')
+        }).catch(err => {
+          throw new Error(err)
+        })
+    });
+  });
+
+  describe('Login user', () => {
+    xit('should fail with wrong email', () => {});
+
+    xit('should fail with incorrect password', () => {});
+
+    xit('should gracefully handle server errors', () => {});
+
+    const successfullReq = requests.post('/api/auth/login').send({
       email: 'anothervalid@email.com',
       password: 'password'
     });
 
-    it('should have the correct status and content type', () => {
+    xit('should have the correct status and content type', () => {
       successfullReq.expect(200).expect('Content-Type', /json/);
     });
 
-    it('should have no errors', () => {
+    xit('should have no errors', () => {
       return successfullReq.then(response => {
         expect(response.body.error).toBe('');
       });
     });
 
-    it('should not return sensitive data after registration', () => {
+    xit('should not return sensitive data after registration', () => {
       return successfullReq.then(response => {
         expect(response.body.data.password).toBe(undefined);
       });
     });
 
-    it('should return a session cookie', () => {
+    xit('should return a session cookie', () => {
       return successfullReq.then(response => {
         expect(response.session).not.toBe(undefined);
-      })
-    })
-
+      });
+    });
   });
 });

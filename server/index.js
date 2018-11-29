@@ -1,11 +1,14 @@
-const { db } = require('./models');
 const app = require('./app');
+const { db } = require('./models');
 
 // Database
 db.authenticate()
   .then(() => {
     console.log('Connection to database established');
-    db.sync();
+    return db.sync();
+  })
+  .then(() => {
+    console.log('Database has been synced');
   })
   .catch(err => {
     console.error('Unaable to connect to the database', err);

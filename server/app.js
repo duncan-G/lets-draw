@@ -13,7 +13,7 @@ const app = express();
 const clientSession = sessions({
   cookieName: 'u_c_s',
   secret: process.env.CS_SECRET,
-  httpOnly: true,
+  // httpOnly: true,
   secure: false,
   ephemeral: true,
   maxAge: 6 * 60 * 60 * 1000 // 6 hours
