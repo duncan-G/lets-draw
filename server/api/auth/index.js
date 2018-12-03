@@ -10,7 +10,7 @@ const controllers = require('./controllers');
 
 router.post(
   '/login',
-  passport.authenticate('local'),
+  passport.authenticate('local', { failWithError: true }),
   controllers.handleSuccessfulLogin
 );
 

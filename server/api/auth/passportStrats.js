@@ -19,16 +19,15 @@ module.exports = (() => {
 
           /* Validate password */
           if (!user) {
-            return done(null, false, { message: 'Incorrect Email/Password.' });
+            return done(null, false);
           }
           if (!user.validPassword(password)) {
-            return done(null, false, { message: 'Incorrect Email/Password.' });
+            return done(null, false);
           }
 
           /* Return userId */
           return done(null, user.id);
         } catch (err) {
-          console.log(err);
           return done(err);
         }
       }

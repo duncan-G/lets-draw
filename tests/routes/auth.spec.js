@@ -21,9 +21,9 @@ describe('User routes', () => {
     await User.create(user0);
   });
 
-  afterAll(async () => {
-    await db.sync({ force: true });
-  });
+  // afterAll(async () => {
+  //   await db.sync({ force: true });
+  // });
 
   describe('Register user', () => {
     it('should save user0 before test suite begins', async () => {
@@ -40,7 +40,8 @@ describe('User routes', () => {
         .expect(400)
         .expect('Content-Type', /json/)
         .then(response => {
-          expect(response.body.error).toBe(
+          expect(response.body.error.type).toBe('RegistrationError');
+          expect(response.body.error.message).toBe(
             'Account already exists. Please log in.'
           );
           expect(response.body.data).toBe('');
@@ -51,17 +52,18 @@ describe('User routes', () => {
     // when the server is unavailable; therefore, we should
     // expect the response to be JSON as it's more easily parsed
     it('should gracefully handle server errors', async () => {
-      return requests.post('/api/auth/register')
+      return requests
+        .post('/api/auth/register')
         .send('a string')
         .expect(500)
         .expect('Content-Type', /json/)
         .then(response => {
-          const error = response.body
+          const error = response.body.error;
           expect(Object.keys(error)).toContain('message');
           expect(Object.keys(error)).toContain('type');
-          expect(typeof error.message).toBe('string')
-          expect(typeof error.type).toBe('string')
-        })
+          expect(typeof error.message).toBe('string');
+          expect(typeof error.type).toBe('string');
+        });
     });
 
     it('should login on successful register', () => {
@@ -75,8 +77,8 @@ describe('User routes', () => {
       });
       // Mock fake passportJS login method
       req.login = (_, callback) => {
-        callback(null)
-      }
+        callback(null);
+      };
 
       const res = httpMocks.createResponse();
 
@@ -89,49 +91,103 @@ describe('User routes', () => {
       };
 
       /* Make request */
-      return controllers.register(req, res, next)
+      return controllers
+        .register(req, res, next)
         .then(() => {
-          const response = res._getData();
+          const response = JSON.parse(res._getData());
           expect(response.error).toBe('');
-          expect(response.data).toBe('Successfully logged in.')
-        }).catch(err => {
-          throw new Error(err)
+          expect(response.data).toBe('Successfully logged in.');
+        })
+        .catch(err => {
+          throw new Error(err);
         })
     });
   });
 
   describe('Login user', () => {
-    xit('should fail with wrong email', () => {});
-
-    xit('should fail with incorrect password', () => {});
-
-    xit('should gracefully handle server errors', () => {});
-
-    const successfullReq = requests.post('/api/auth/login').send({
-      email: 'anothervalid@email.com',
-      password: 'password'
+    it('should fail with wrong email', () => {
+      return (
+        requests
+          .post('/api/auth/login')
+          .send({...user0, email: 'invalid@email.com'})
+          .expect(401)
+          // .expect('Content-Type', /json/)
+          .then(response => {
+            expect(response.body.error.type).toBe('AuthenticationError');
+            expect(response.body.error.message).toBe(
+              'Incorrect Email/Password.'
+            );
+            expect(response.body.data).toBe('');
+          })
+      );
     });
 
-    xit('should have the correct status and content type', () => {
-      successfullReq.expect(200).expect('Content-Type', /json/);
+    it('should fail with incorrect password', () => {
+      return (
+        requests
+          .post('/api/auth/login')
+          .send({...user0, password: 'issowrong'})
+          .expect(401)
+          // .expect('Content-Type', /json/)
+          .then(response => {
+            expect(response.body.error.type).toBe('AuthenticationError');
+            expect(response.body.error.message).toBe(
+              'Incorrect Email/Password.'
+            );
+            expect(response.body.data).toBe('');
+          })
+      );
     });
 
-    xit('should have no errors', () => {
-      return successfullReq.then(response => {
-        expect(response.body.error).toBe('');
-      });
+    it('should gracefully handle server errors', () => {
+      return requests
+        .post('/api/auth/login')
+        .send('a string')
+        .expect(500)
+        .expect('Content-Type', /json/)
+        .then(response => {
+          const error = response.body.error;
+          expect(Object.keys(error)).toContain('message');
+          expect(Object.keys(error)).toContain('type');
+          expect(typeof error.message).toBe('string');
+          expect(typeof error.type).toBe('string');
+        });
     });
 
-    xit('should not return sensitive data after registration', () => {
-      return successfullReq.then(response => {
-        expect(response.body.data.password).toBe(undefined);
-      });
+    it('should have no errors', () => {
+      return requests
+        .post('/api/auth/login')
+        .send( {...user0})
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .then(response => {
+          expect(response.body.error).toBe('');
+        });
     });
 
-    xit('should return a session cookie', () => {
-      return successfullReq.then(response => {
-        expect(response.session).not.toBe(undefined);
-      });
+    it('should not return sensitive data after registration', () => {
+      return requests
+        .post('/api/auth/login')
+        .send({...user0})
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .then(response => {
+          expect(response.body.data.password).toBe(undefined);
+        });
+    });
+
+    it('should return a session cookie', () => {
+      const agent = supertest.agent(app);
+      return agent
+        .post('/api/auth/login')
+        .send({...user0})
+        .then(response => {
+          console.log('headers', response.header, response.header);
+          throw response.header
+        })
+        .catch(err => {
+          console.log(err)
+        })
     });
   });
 });
