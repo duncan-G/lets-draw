@@ -15,7 +15,7 @@ function ValidatorFactory() {
 
   validator.isMinLength = function(length) {
     return value => {
-      return value.length >= length && value.trim().length !== 0; // All white spaces
+      return value.length >= length && value.trim().length !== 0; // Also check for all white spaces
     };
   };
 

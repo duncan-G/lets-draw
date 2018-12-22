@@ -2,59 +2,82 @@ import React from 'react';
 import {
   Input,
   Button,
-  FormControl,
   InputLabel,
+  FormControl,
   FormHelperText
 } from '@material-ui/core';
-import { Validators, FormBuilder } from '../../components/Form2';
+import { Validators, FormBuilder } from '../../components/Form';
 
-class Form extends React.Component {
-  render() {
-    return (
-      <form
-        onSubmit={event => this.props.handleSubmit(event, this.props.register)}
+import './Register.css';
+
+const Form = props => {
+  return (
+    <form
+      id="registration-form"
+      onSubmit={event => props.handleSubmit(event, props.login)}
+    >
+      <FormControl className="auth-form-field">
+        <InputLabel htmlFor="email">Enter email</InputLabel>
+        <Input name="email" label="Email" onChange={props.handleChange} />
+        {props.formErrors.email && props.formErrors.email.length > 0 && (
+          <FormHelperText className="auth-form-error">
+            {props.formErrors.email[0]}
+          </FormHelperText>
+        )}
+      </FormControl>
+
+      <FormControl className="auth-form-field">
+        <InputLabel htmlFor="password">Enter password</InputLabel>
+        <Input
+          name="password"
+          label="password"
+          type="password"
+          onChange={props.handleChange}
+        />
+        {props.formErrors.password && props.formErrors.password.length > 0 && (
+          <FormHelperText className="auth-form-error">
+            {props.formErrors.password[0]}
+          </FormHelperText>
+        )}
+      </FormControl>
+
+      <FormControl className="auth-form-field">
+        <InputLabel htmlFor="passwordConfirm">Confirm password</InputLabel>
+        <Input
+          name="passwordConfirm"
+          label="passwordConfirm"
+          type="password"
+          onChange={props.handleChange}
+        />
+        {props.formErrors.password && props.formErrors.password.length > 0 && (
+          <FormHelperText className="auth-form-error">
+            {props.formErrors.passwordConfirm[0]}
+          </FormHelperText>
+        )}
+      </FormControl>
+
+      {props.loginError && (
+        <FormHelperText className="auth-form-error">
+          {props.loginError}
+        </FormHelperText>
+      )}
+
+      <Button
+        variant="contained"
+        color="primary"
+        label="Submit"
+        type="submit"
+        className="auth-submit-button"
       >
-        <h3>Login</h3>
-        <Button
-          variant="contained"
-          color="primary"
-          label="Submit"
-          type="submit"
-          className="registerFormBtn"
-        >
-          Submit
-        </Button>
-      </form>
-    );
-  }
-}
-
-const MaterialInput = props => (
-  <FormControl>
-    <InputLabel htmlFor={props.name}>{props.placeHolder}</InputLabel>
-    <Input
-      name={props.name}
-      type={props.type ? props.type : 'text'}
-      onChange={props.handleChange}
-    />
-    {props.renderError()}
-  </FormControl>
-);
-
-const error = props => {
-  if (props.error && props.error.length > 0) {
-    return <FormHelperText>{props.error[0]}</FormHelperText>;
-  } else {
-    return;
-  }
+        Create an account
+      </Button>
+    </form>
+  );
 };
 
-const LoginForm = FormBuilder({
+const RegisterForm = FormBuilder({
   email: {
     value: '',
-    name: 'email',
-    placeHolder: 'Enter email',
-    renderField: (props) => <MaterialInput {...props} />,
     validators: [
       [Validators.isRequired, 'Email is required.'],
       [Validators.isEmail, 'Email is invalid.']
@@ -62,25 +85,19 @@ const LoginForm = FormBuilder({
   },
   password: {
     value: '',
-    name: 'password',
-    placeHolder: 'Enter password',
-    renderField: (props) => <MaterialInput {...props} />,
     validators: [
       [Validators.isRequired, 'Password is required.'],
-      [Validators.isMinLength(6), 'Should be atleast 6 characters.'],
-      [Validators.isMaxLength(20), 'Should be less than 20 characters.']
+      [Validators.isMinLength(6), 'Password must be atleast 6 character'],
+      [
+        Validators.isMaxLength(20),
+        'Password cannot be longer than 20 characters.'
+      ]
     ]
   },
   passwordConfirm: {
     value: '',
-    name: 'passwordConfirm',
-    placeHolder: 'Confirm password',
-    renderField: (props) => <MaterialInput {...props} />,
-    validators: [
-      [Validators.isRequired, 'Password confirmation is required.'],
-      [Validators.match('password'), 'Does not match password']
-    ]
+    validators: [[Validators.isRequired, 'Password is required.']]
   }
 })(Form);
 
-export default LoginForm;
+export default RegisterForm;

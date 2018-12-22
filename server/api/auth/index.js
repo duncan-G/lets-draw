@@ -8,12 +8,14 @@ const controllers = require('./controllers');
  * See ./passportStrats for details
  */
 
+ // api/auth/login
 router.post(
   '/login',
   passport.authenticate('local', { failWithError: true }),
   controllers.handleSuccessfulLogin
 );
 
+ // api/auth/register
 router.post(
   '/register',
   controllers.register,

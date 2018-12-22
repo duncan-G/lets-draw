@@ -30,7 +30,7 @@ class Login extends React.Component {
           />
           <div className="login-register">
             <span className="text">Dont have an account?</span>
-            <Link to="">Register</Link>
+            <Link to="/register">Register</Link>
           </div>
         </div>
       </div>

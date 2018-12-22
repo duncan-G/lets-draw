@@ -6,6 +6,7 @@ import ProtectedRoute from './ProtectedRoute';
 
 import HomePage from '../HomePage/Loadable';
 import Login from '../Login/Loadable';
+import Register from '../Register/Loadable';
 import ResourceLoading from './ResourceLoading';
 import ErrorSnackBar from './ErrorSnackbar';
 
@@ -26,6 +27,7 @@ class App extends Component {
         <Switch>
           <ProtectedRoute path="/homepage" component={HomePage} />
           <Route path="/login" component={Login} />
+          <Route path="/register" component={Register} />
         </Switch>
         <ErrorSnackBar />
       </AppWrapper>

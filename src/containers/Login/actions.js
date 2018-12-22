@@ -13,7 +13,7 @@ export const loginError = loginError => ({
   loginError
 });
 
-/* Thunk creaters */
+/* Thunk creators */
 export const loginUser = data => {
   return dispatch => {
     dispatch(resourceLoading());
