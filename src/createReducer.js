@@ -5,9 +5,11 @@ import history from './utils/history';
 import globalReducer from './containers/App/reducer';
 
 export default function createReducer(injectedReducers = {}) {
-  return combineReducers({
+  const rootReducer =  combineReducers({
     router: connectRouter(history),
     global: globalReducer,
     ...injectedReducers
   });
+
+  return rootReducer
 }

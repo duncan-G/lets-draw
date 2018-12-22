@@ -1,7 +1,8 @@
 const app = require('./app');
 const { db } = require('./models');
 
-// Database
+const PORT = process.env.SERVER_PORT || 8080;
+
 db.authenticate()
   .then(() => {
     console.log('Connection to database established');
@@ -10,13 +11,11 @@ db.authenticate()
   .then(() => {
     console.log('Database has been synced');
   })
+  .then(() => {
+      app.listen(PORT, () => {
+      console.log('Listening on port', PORT);
+    });
+  })
   .catch(err => {
-    console.error('Unaable to connect to the database', err);
+    console.error('Unable to start server', err);
   });
-
-// Start server
-const PORT = process.env.SERVER_PORT || 8080;
-
-app.listen(PORT, () => {
-  console.log('Listening on port', PORT);
-});

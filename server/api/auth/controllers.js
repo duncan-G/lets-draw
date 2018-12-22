@@ -24,6 +24,13 @@ async function register(req, res, next) {
           message: 'Account already exists. Please log in.'
         })
       );
+    } else if (req.body.password !== req.body.passwordConfirm) {
+      return res.status(400).send(
+        new ResponseMessage(null, {
+          name: 'RegistrationError',
+          message: 'Password is not the same as password confirmation.'
+        })
+      );
     } else {
       /** Create and login user
        * passport attaches req.login method
