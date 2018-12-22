@@ -13,7 +13,7 @@ import { makeSelectRegistrationError } from './selectors';
 
 const Register = props => {
   return (
-    <div className="auth-page">
+    <div id="register-page" className="auth-page">
       <div className="auth-form-wrapper">
         <div className="auth-logo">
           <img src="/images/logo.svg" alt="/images/logo.svg" />

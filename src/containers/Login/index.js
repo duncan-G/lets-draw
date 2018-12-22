@@ -17,18 +17,18 @@ class Login extends React.Component {
 
   render() {
     return (
-      <div id="login">
-        <div id="login-form-wrapper">
-          <div id="login-logo">
+      <div id="login-page" className="auth-page">
+        <div className="auth-form-wrapper">
+          <div className="auth-logo">
             <img src="/images/logo.svg" alt="/images/logo.svg" />
           </div>
-          <h3 id="login-title">Login</h3>
+          <h3 className="auth-title">Login</h3>
           <LoginForm
             id="login-form"
             login={this.props.loginUser}
             loginError={this.props.loginError}
           />
-          <div className="login-register">
+          <div className="auth-alt-option">
             <span className="text">Dont have an account?</span>
             <Link to="/register">Register</Link>
           </div>

@@ -13,7 +13,7 @@ import './Register.css';
 const Form = props => {
   return (
     <form
-      id="registration-form"
+      className="auth-form"
       onSubmit={event => props.handleSubmit(event, props.login)}
     >
       <FormControl className="auth-form-field">
@@ -96,7 +96,7 @@ const RegisterForm = FormBuilder({
   },
   passwordConfirm: {
     value: '',
-    validators: [[Validators.isRequired, 'Password is required.']]
+    validators: [[Validators.isRequired, 'Password confirmation is required.']]
   }
 })(Form);
 

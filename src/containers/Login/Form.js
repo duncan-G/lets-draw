@@ -15,10 +15,10 @@ class Form extends React.Component {
   render() {
     return (
       <form
-        className="login-form"
+        className="auth-form"
         onSubmit={event => this.props.handleSubmit(event, this.props.login)}
       >
-        <FormControl className="login-form-field">
+        <FormControl className="auth-form-field">
           <InputLabel htmlFor="email">Enter email</InputLabel>
           <Input
             name="email"
@@ -27,13 +27,13 @@ class Form extends React.Component {
           />
           {this.props.formErrors.email &&
             this.props.formErrors.email.length > 0 && (
-              <FormHelperText className="login-form-error">
+              <FormHelperText className="auth-form-error">
                 {this.props.formErrors.email[0]}
               </FormHelperText>
             )}
         </FormControl>
 
-        <FormControl className="login-form-field">
+        <FormControl className="auth-form-field">
           <InputLabel htmlFor="password">Enter password</InputLabel>
           <Input
             name="password"
@@ -43,14 +43,14 @@ class Form extends React.Component {
           />
           {this.props.formErrors.password &&
             this.props.formErrors.password.length > 0 && (
-              <FormHelperText className="login-form-error">
+              <FormHelperText className="auth-form-error">
                 {this.props.formErrors.password[0]}
               </FormHelperText>
             )}
         </FormControl>
 
         {this.props.loginError && (
-          <FormHelperText className="login-form-error">
+          <FormHelperText className="auth-form-error">
             {this.props.loginError}
           </FormHelperText>
         )}
@@ -71,7 +71,7 @@ class Form extends React.Component {
           color="primary"
           label="Submit"
           type="submit"
-          className="submit-button"
+          className="auth-submit-button"
         >
           Submit
         </Button>
@@ -82,7 +82,7 @@ class Form extends React.Component {
             color="secondary"
             label="Submit"
             type="submit"
-            className="submit-button"
+            className="auth-submit-button"
           >
             Login with Google
           </Button>
