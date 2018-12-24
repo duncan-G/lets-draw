@@ -7,6 +7,7 @@ import { createStructuredSelector } from 'reselect';
 import injectReducer from '../../utils/injectReducer';
 import reducer from './reducer';
 
+import withTransition from '../Wrappers/withTransition';
 import LoginForm from './Form';
 import { loginUser } from './actions';
 import { makeSelectLoginError } from './selectors';
@@ -14,7 +15,6 @@ import { makeSelectLoginError } from './selectors';
 import './Login.css';
 
 class Login extends React.Component {
-
   render() {
     return (
       <div id="login-page" className="auth-page">
@@ -55,6 +55,7 @@ const withConnect = connect(
 const withReducer = injectReducer({ key: 'login', reducer });
 
 export default compose(
+  withTransition,
   withReducer,
-  withConnect,
-)(Login)
+  withConnect
+)(Login);

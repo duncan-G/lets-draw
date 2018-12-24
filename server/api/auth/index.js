@@ -28,6 +28,4 @@ router.get('/reset-token', controllers.getResetToken);
 
 router.post('/reset-token', controllers.verifyResetToken);
 
-router.post('/reset-password', controllers.resetPassword);
-
 module.exports = router;

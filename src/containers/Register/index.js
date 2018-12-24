@@ -4,6 +4,7 @@ import { compose } from 'redux';
 import { Link } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
 
+import withTransition from '../Wrappers/withTransition';
 import injectReducer from '../../utils/injectReducer';
 import reducer from './reducer';
 
@@ -50,6 +51,7 @@ const withConnect = connect(
 const withReducer = injectReducer({ key: 'register', reducer });
 
 export default compose(
+  withTransition,
   withReducer,
   withConnect
 )(Register);

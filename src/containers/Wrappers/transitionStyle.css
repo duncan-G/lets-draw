@@ -1,0 +1,15 @@
+.component-enter {
+  opacity: 0.01;
+}
+.component-enter-active {
+  opacity: 1;
+  transition: all 1000ms ease-out;
+}
+.component-exit {
+  opacity: 1;
+}
+
+.component-exit-active {
+  opacity: 0.01;
+  transition: all 1000ms ease-out;
+}

@@ -13,7 +13,7 @@ function handleFailedLogin(err, req, res, next) {
 
 async function register(req, res, next) {
   try {
-    /* Check if user exists */
+    /* Check if user exists and if password=paswordConfirm */
     const user = await User.findOne({
       where: { email: req.body.email }
     });
@@ -59,7 +59,39 @@ async function getResetToken(req, res, next) {}
 
 async function verifyResetToken(req, res, next) {}
 
-async function resetPassword(req, res, next) {}
+async function changePassword(req, res, next) {
+  const user = req.user || User.findOne({ where: { email: req.body.email } });
+
+  if (!user) {
+    res.status(400).send(
+      new ResponseMessage(null, {
+        name: 'ResetPasswordError',
+        message: 'User does not exist.'
+      })
+    );
+  } else if (
+    !req.skipOldPasswordCheck &&
+    !user.validPassword(req.body.oldPassword)
+  ) {
+    res.status(400).send(
+      new ResponseMessage(null, {
+        name: 'ResetPasswordError',
+        message: 'Incorrect password entered'
+      })
+    );
+  } else if (req.body.newPassword !== req.body.passwordConfirm) {
+    res.status(400).send(
+      new ResponseMessage(null, {
+        name: 'RegistrationError',
+        message: 'New password is not the same as password confirmation.'
+      })
+    );
+  } else {
+    user.password = req.body.newPassword;
+    user.save();
+    res.status(201).send(new ResponseMessage('Successfully changed password.'));
+  }
+}
 
 module.exports = {
   handleSuccessfulLogin,
@@ -68,5 +100,5 @@ module.exports = {
   logout,
   getResetToken,
   verifyResetToken,
-  resetPassword
+  changePassword
 };
