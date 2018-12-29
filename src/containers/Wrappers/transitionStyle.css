@@ -1,15 +1,19 @@
 .component-enter {
   opacity: 0.01;
+  transform: scale(0.9) translateY(50%);
 }
 .component-enter-active {
   opacity: 1;
-  transition: all 1000ms ease-out;
+  transform: scale(1) translateY(0%);
+  transition: all 300ms ease-out;
 }
 .component-exit {
   opacity: 1;
+  transform: scale(1) translateY(0%);
 }
 
 .component-exit-active {
   opacity: 0.01;
-  transition: all 1000ms ease-out;
+  transform: scale(0.9) translateY(50%);
+  transition: all 300ms ease-out;
 }

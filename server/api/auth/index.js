@@ -8,24 +8,39 @@ const controllers = require('./controllers');
  * See ./passportStrats for details
  */
 
- // api/auth/login
+// POST api/auth/login
 router.post(
   '/login',
   passport.authenticate('local', { failWithError: true }),
   controllers.handleSuccessfulLogin
 );
 
- // api/auth/register
+// POST api/auth/register
 router.post(
   '/register',
   controllers.register,
   controllers.handleSuccessfulLogin
 );
 
+// POST api/auth/logout
 router.post('/logout', controllers.logout);
 
-router.get('/reset-token', controllers.getResetToken);
+// GET api/auth/reset-token
+router.post('/reset-token', controllers.getResetToken);
 
-router.post('/reset-token', controllers.verifyResetToken);
+// POST api/auth/reset-token
+router.post('/verify-token', controllers.verifyResetToken);
 
+// POST api/auth/change-password
+router.post(
+  '/change-password',
+  (req, res, next) => {
+    req.passwordCheck = true;
+    next();
+  },
+  controllers.changePassword
+);
+
+// POST api/auth/reset-password
+router.post('/reset-password', controllers.changePassword);
 module.exports = router;

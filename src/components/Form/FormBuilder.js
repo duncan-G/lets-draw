@@ -40,7 +40,7 @@ export default function FormBuilder(fieldControllers) {
         super();
         this.state = {
           fieldControllers: {},
-          formErrors: {},
+          formErrors: {}
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -50,7 +50,9 @@ export default function FormBuilder(fieldControllers) {
       }
 
       componentDidMount() {
+        console.log(this.props);
         fieldControllers = fieldControllers || {};
+        this.setInitialValues(fieldControllers);
         this.setState({
           fieldControllers: fieldControllers,
           formErrors: Object.keys(fieldControllers).reduce((acum, curr) => {
@@ -60,16 +62,24 @@ export default function FormBuilder(fieldControllers) {
         });
       }
 
+      setInitialValues(fieldControllers) {
+        Object.keys(fieldControllers).forEach(field => {
+          if (this.props.hasOwnProperty(field)) {
+            fieldControllers[field].value = this.props[field];
+          }
+        });
+      }
+
       handleChange = event => {
         event.persist();
         this.debounceChange(event);
       };
 
       debounceChange = event => {
-        const debouncedChange = debounce(event => {
+        this.debouncedChange = debounce(event => {
           this.makeChange(event);
         }, 800);
-        debouncedChange(event);
+        this.debouncedChange(event);
       };
 
       makeChange = event => {
@@ -98,6 +108,8 @@ export default function FormBuilder(fieldControllers) {
 
       handleSubmit = (event, callback) => {
         event.preventDefault();
+        this.debouncedChange && this.debouncedChange.cancel();
+
         const [errorsExist, validationErrors] = this.validateAll();
         if (!errorsExist) {
           const formValues = Object.keys(this.state.fieldControllers).reduce(

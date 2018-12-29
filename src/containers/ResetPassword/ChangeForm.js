@@ -8,24 +8,13 @@ import {
 } from '@material-ui/core';
 import { Validators, FormBuilder } from '../../components/Form';
 
-import './Register.css';
-
 const Form = props => {
   return (
     <form
       className="auth-form"
-      onSubmit={event => props.handleSubmit(event, props.register)}
+      onSubmit={event => props.handleSubmit(event, props.changePassword)}
     >
-      <FormControl className="auth-form-field">
-        <InputLabel htmlFor="email">Enter email</InputLabel>
-        <Input name="email" label="Email" onChange={props.handleChange} />
-        {props.formErrors.email && props.formErrors.email.length > 0 && (
-          <FormHelperText className="auth-form-error">
-            {props.formErrors.email[0]}
-          </FormHelperText>
-        )}
-      </FormControl>
-
+      <input type="hidden" value={props.email} onChange={props.handleChange}/>
       <FormControl className="auth-form-field">
         <InputLabel htmlFor="password">Enter password</InputLabel>
         <Input
@@ -56,9 +45,9 @@ const Form = props => {
         )}
       </FormControl>
 
-      {props.loginError && (
+      {props.changePasswordError && (
         <FormHelperText className="auth-form-error">
-          {props.loginError}
+          {props.changePasswordError}
         </FormHelperText>
       )}
 
@@ -69,19 +58,15 @@ const Form = props => {
         type="submit"
         className="auth-submit-button"
       >
-        Create an account
+        Submit
       </Button>
     </form>
   );
 };
 
-const RegisterForm = FormBuilder({
+const ChangePasswordForm = FormBuilder({
   email: {
-    value: '',
-    validators: [
-      [Validators.isRequired, 'Email is required.'],
-      [Validators.isEmail, 'Email is invalid.']
-    ]
+    value: ''
   },
   password: {
     value: '',
@@ -100,4 +85,4 @@ const RegisterForm = FormBuilder({
   }
 })(Form);
 
-export default RegisterForm;
+export default ChangePasswordForm;

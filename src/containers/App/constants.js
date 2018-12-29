@@ -6,3 +6,6 @@ export const RESOLVE_APP_ERROR = 'RESOLVE_APP_ERROR';
 
 export const ADD_USER = 'ADD_USER';
 export const REMOVE_CURRENT_USER = 'REMOVE_CURRENT_USER';
+
+export const APP_MESSAGE = 'APP_MESSAGE';
+export const RESOLVE_APP_MESSAGE = 'RESOLVE_APP_MESSAGE';

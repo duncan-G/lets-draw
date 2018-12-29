@@ -1,5 +1,8 @@
+const bcrypt = require('bcrypt');
+const crypto = require('crypto');
+
 const { User } = require('../../models');
-const { ResponseMessage } = require('../utils');
+const { ResponseMessage, sendMail } = require('../utils');
 
 function handleSuccessfulLogin(req, res) {
   console.log(req.cookies, 'cookies');
@@ -53,43 +56,118 @@ async function register(req, res, next) {
   }
 }
 
-async function logout(req, res, next) {}
+function logout(req, res, next) {
+  req.logout();
+  res.send(new ResponseMessage('Succefully logged out.'));
+}
 
-async function getResetToken(req, res, next) {}
+async function getResetToken(req, res, next) {
+  try {
+    const to = req.body.email;
+    const user = await User.findOne({ where: { email: to } });
 
-async function verifyResetToken(req, res, next) {}
+
+    if (user) {
+      const token = crypto.randomBytes(20).toString('hex');
+      const hashedToken = bcrypt.hashSync(token, 14);
+
+      await user.update({
+        resetToken: hashedToken,
+        resetTokenExpiration: Date.now() + 360000
+      });
+
+      const subject = `${process.env.APP_NAME}: Reset Password Link`;
+      const text = `Click here to reset you password. ${
+        process.env.CLIENT_URL
+      }reset-password/${hashedToken}`;
+
+      /////////////////////////////////// Refactor (avoid nested try catch);
+      try {
+        sendMail(to, subject, text);
+        res.send(new ResponseMessage(to));
+      } catch (error) {
+        res.status(400).send(
+          new ResponseMessage(null, {
+            name: 'ResetPasswordError',
+            message: 'Failed to send email'
+          })
+        );
+      }
+    } else {
+      // Send 200 response even if email is not incorrect.
+      // Prevents users from guessing if an email exists in the database
+      res.send(new ResponseMessage(to));
+    }
+  } catch (err) {
+    err.name = err.name || 'ResetPasswordError';
+    next(err);
+  }
+}
+
+async function verifyResetToken(req, res, next) {
+  try {
+    const resetToken = req.body.resetToken;
+    const user = await User.findOne({ where: { resetToken } });
+
+    if (!user) {
+      res.status(400).send(
+        new ResponseMessage(null, {
+          name: 'ResetPasswordError',
+          message: 'Invalid token.'
+        })
+      );
+    } else if (user.resetTokenExpiration < Date.now()) {
+      res.status(400).send(
+        new ResponseMessage(null, {
+          name: 'ResetPasswordError',
+          message: 'Token has expired.'
+        })
+      );
+    } else {
+      res.send(new ResponseMessage(user.email));
+    }
+  } catch (err) {
+    err.name = err.name || 'ResetPasswordError';
+    next(err);
+  }
+}
 
 async function changePassword(req, res, next) {
-  const user = req.user || User.findOne({ where: { email: req.body.email } });
+  try {
+    const user =
+      req.user || (await User.findOne({ where: { email: req.body.email } }));
 
-  if (!user) {
-    res.status(400).send(
-      new ResponseMessage(null, {
-        name: 'ResetPasswordError',
-        message: 'User does not exist.'
-      })
-    );
-  } else if (
-    !req.skipOldPasswordCheck &&
-    !user.validPassword(req.body.oldPassword)
-  ) {
-    res.status(400).send(
-      new ResponseMessage(null, {
-        name: 'ResetPasswordError',
-        message: 'Incorrect password entered'
-      })
-    );
-  } else if (req.body.newPassword !== req.body.passwordConfirm) {
-    res.status(400).send(
-      new ResponseMessage(null, {
-        name: 'RegistrationError',
-        message: 'New password is not the same as password confirmation.'
-      })
-    );
-  } else {
-    user.password = req.body.newPassword;
-    user.save();
-    res.status(201).send(new ResponseMessage('Successfully changed password.'));
+    if (!user) {
+      res.status(400).send(
+        new ResponseMessage(null, {
+          name: 'ResetPasswordError',
+          message: 'Incorrect email.'
+        })
+      );
+    } else if (req.passwordCheck && !user.validPassword(req.body.oldPassword)) {
+      res.status(400).send(
+        new ResponseMessage(null, {
+          name: 'ResetPasswordError',
+          message: 'Incorrect password entered'
+        })
+      );
+    } else if (req.body.password !== req.body.passwordConfirm) {
+      res.status(400).send(
+        new ResponseMessage(null, {
+          name: 'RegistrationError',
+          message: 'New password is not the same as password confirmation.'
+        })
+      );
+    } else {
+      user.password = req.body.password;
+      user.save();
+      res
+        .status(201)
+        .send(new ResponseMessage('Successfully changed password.'));
+    }
+  } catch (err) {
+    err.name = err.name || 'ResetPasswordError';
+    next(err);
   }
 }
 

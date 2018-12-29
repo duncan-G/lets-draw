@@ -18,7 +18,6 @@ router.use((err, req, res, next) => {
 });
 
 router.use((req, res, next) => {
-  console.log('why am i here?', req.baseUrl);
   res.status(404).send(
     new ResponseMessage(null, {
       name: '404Error',

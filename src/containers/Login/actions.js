@@ -26,11 +26,11 @@ export const loginUser = data => {
       body: JSON.stringify(data)
     })
       .then(response => response.json())
-      .then(data => {
-        if (data.error) {
-          dispatch(loginError(data.error.message));
+      .then(result => {
+        if (result.error) {
+          dispatch(loginError(result.error.message));
         } else {
-          dispatch(addUser(data));
+          dispatch(addUser(result));
           history.push('/homepage');
 
         }
