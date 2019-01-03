@@ -9,7 +9,7 @@
 
 .Homepage-header {
   background-color: #282c34;
-  min-height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
   flex: 1;

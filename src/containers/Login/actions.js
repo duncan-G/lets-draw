@@ -30,9 +30,8 @@ export const loginUser = data => {
         if (result.error) {
           dispatch(loginError(result.error.message));
         } else {
-          dispatch(addUser(result));
-          history.push('/homepage');
-
+          dispatch(addUser(result.data));
+          history.push('/');
         }
       })
       .catch(error => {

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import ProtectedRoute from './ProtectedRoute';
 
-import HomePage from '../HomePage/Loadable';
+import AppContent from '../Content';
 import Login from '../Login/Loadable';
 import Register from '../Register/Loadable';
 import ResetPassword from '../ResetPassword/Loadable';
@@ -18,6 +18,7 @@ const AppWrapper = styled.div`
   flex-direction: column;
   width: 100%;
   height: 100%;
+  overflow: hidden;
 `;
 
 class App extends Component {
@@ -26,10 +27,10 @@ class App extends Component {
       <AppWrapper>
         <ResourceLoading />
         <Switch>
-          <ProtectedRoute path="/homepage" component={HomePage} />
-          <Route path="/login" component={Login} />
-          <Route path="/register" component={Register} />
-          <Route path="/reset-password" component={ResetPassword} />
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/register" component={Register} />
+          <Route exact path="/reset-password" component={ResetPassword} />
+          <ProtectedRoute path="/" component={AppContent} />
         </Switch>
         <ErrorSnackBar />
       </AppWrapper>

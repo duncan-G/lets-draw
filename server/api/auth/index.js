@@ -23,7 +23,7 @@ router.post(
 );
 
 // POST api/auth/logout
-router.post('/logout', controllers.logout);
+router.get('/logout', controllers.logout);
 
 // GET api/auth/reset-token
 router.post('/reset-token', controllers.getResetToken);

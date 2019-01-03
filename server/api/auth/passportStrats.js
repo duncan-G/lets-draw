@@ -25,8 +25,8 @@ module.exports = (() => {
             return done(null, false);
           }
 
-          /* Return userId */
-          return done(null, user.id);
+          /* Return user Email */
+          return done(null, user.email);
         } catch (err) {
           return done(err);
         }
@@ -35,14 +35,14 @@ module.exports = (() => {
   );
 
   /* Serialize userId into a session cookie */
-  passport.serializeUser((userId, done) => {
-    done(null, userId);
+  passport.serializeUser((userEmail, done) => {
+    done(null, userEmail);
   });
 
   /* Deserialize user from a session cookie*/
-  passport.deserializeUser(async (id, done) => {
+  passport.deserializeUser(async (email, done) => {
     try {
-      const user = await User.findById(id, {
+      const user = await User.findByEmail(email, {
         attributes: {
           exclude: ['password']
         }

@@ -50,7 +50,6 @@ export default function FormBuilder(fieldControllers) {
       }
 
       componentDidMount() {
-        console.log(this.props);
         fieldControllers = fieldControllers || {};
         this.setInitialValues(fieldControllers);
         this.setState({

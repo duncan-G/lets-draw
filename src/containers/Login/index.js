@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { Link } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
+import Button from '@material-ui/core/Button';
 
 import injectReducer from '../../utils/injectReducer';
 import reducer from './reducer';
@@ -30,6 +31,18 @@ const Login = props => {
           login={props.loginUser}
           loginError={props.loginError}
         />
+
+      <div className="social-logins">
+        <Button
+          variant="contained"
+          color="secondary"
+          label="Submit"
+          type="submit"
+          className="auth-submit-button"
+        >
+          Login with Google
+        </Button>
+      </div>
         <div className="auth-alt-option">
           <span className="text">Dont have an account?</span>
           <Link to="/register">Register</Link>

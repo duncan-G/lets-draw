@@ -5,8 +5,7 @@ const { User } = require('../../models');
 const { ResponseMessage, sendMail } = require('../utils');
 
 function handleSuccessfulLogin(req, res) {
-  console.log(req.cookies, 'cookies');
-  res.json(new ResponseMessage('Successfully logged in.'));
+  res.json(new ResponseMessage(req.user));
 }
 
 function handleFailedLogin(err, req, res, next) {
@@ -81,7 +80,6 @@ async function getResetToken(req, res, next) {
         process.env.CLIENT_URL
       }reset-password/${hashedToken}`;
 
-      /////////////////////////////////// Refactor (avoid nested try catch);
       try {
         sendMail(to, subject, text);
         res.send(new ResponseMessage(to));

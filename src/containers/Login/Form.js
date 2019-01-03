@@ -70,18 +70,6 @@ const Form = props => {
       >
         Submit
       </Button>
-
-      <div className="social-logins">
-        <Button
-          variant="contained"
-          color="secondary"
-          label="Submit"
-          type="submit"
-          className="auth-submit-button"
-        >
-          Login with Google
-        </Button>
-      </div>
     </form>
   );
 };
