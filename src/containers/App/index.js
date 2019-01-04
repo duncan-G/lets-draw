@@ -10,6 +10,7 @@ import Register from '../Register/Loadable';
 import ResetPassword from '../ResetPassword/Loadable';
 import ResourceLoading from './ResourceLoading';
 import ErrorSnackBar from './ErrorSnackbar';
+import MessageSnackBar from './MessageSnackbar';
 
 import './App.css';
 
@@ -33,6 +34,7 @@ class App extends Component {
           <ProtectedRoute path="/" component={AppContent} />
         </Switch>
         <ErrorSnackBar />
+        <MessageSnackBar />
       </AppWrapper>
     );
   }

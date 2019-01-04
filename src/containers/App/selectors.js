@@ -25,3 +25,11 @@ export const makeSelectAppError = () =>
       return globalState.get('appError');
     }
   );
+
+export const makeSelectAppMessage = () =>
+  createSelector(
+    selectGlobal,
+    globalState => {
+      return globalState.get('appMessage');
+    }
+  );

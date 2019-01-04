@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
  */
 const ResourceLoading = props => {
   if (props.appLoading) {
-    return <LinearProgress />;
+    return <LinearProgress style={{ zIndex: 100000 }} />;
   }
   return null;
 };

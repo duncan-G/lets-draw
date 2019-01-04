@@ -21,6 +21,7 @@ const drawerWidth = 240;
 const styles = theme => ({
   root: { display: 'flex' },
   appBar: {
+    height: '64px',
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,

@@ -146,7 +146,7 @@ async function changePassword(req, res, next) {
       res.status(400).send(
         new ResponseMessage(null, {
           name: 'ResetPasswordError',
-          message: 'Incorrect password entered'
+          message: 'Current password is incorrect.'
         })
       );
     } else if (req.body.password !== req.body.passwordConfirm) {

@@ -7,7 +7,8 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import AppToolbar from '../Toolbar';
 import AppNavbar from '../Navbar';
 
-import LetsDraw from '../LetsDraw';
+import LetsDraw from '../LetsDraw/Loadable';
+import UserProfile from '../Profile/Loadable';
 
 const drawerWidth = 240;
 
@@ -47,8 +48,7 @@ const styles = theme => ({
     ...theme.mixins.toolbar
   },
   content: {
-    height: '100%',
-    flexGrow: 1,
+    flexGrow: 1
   }
 });
 
@@ -93,13 +93,13 @@ class AppContent extends React.Component {
   render() {
     const { classes } = this.props;
     const { path } = this.props.match;
-    console.dir(this.toolbarEl);
+
     return (
       <div className={classes.root}>
         <CssBaseline />
         <AppToolbar
           ref={node => {
-            this.toolbarEl = node
+            this.toolbarEl = node;
           }}
           handleDrawerOpen={this.handleDrawerOpen}
           open={this.state.open}
@@ -115,7 +115,12 @@ class AppContent extends React.Component {
         <main className={classes.content}>
           <div className={classes.toolbar} />
           <Switch>
-            <Route path={path} component={LetsDraw} />
+            <Route
+              exact
+              path={`${path}user-profile`}
+              component={UserProfile}
+            />
+            <Route exact path={path} component={LetsDraw} />
           </Switch>
         </main>
       </div>

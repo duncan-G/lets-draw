@@ -13,6 +13,8 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew';
 import { withStyles } from '@material-ui/core/styles';
 
+import history from '../../utils/history';
+
 const styles = theme => ({
   root: {
     display: 'flex'
@@ -38,6 +40,11 @@ class UserProfileOptions extends React.Component {
     this.props.logout();
     this.handleClose();
   };
+
+  handleViewProfile = () => {
+    history.push('/user-profile');
+    this.handleClose();
+  }
 
   handleClose = () => {
     this.setState({ anchorEl: null });
@@ -80,7 +87,7 @@ class UserProfileOptions extends React.Component {
                   <ClickAwayListener onClickAway={this.handleClose}>
                     <MenuList>
                       <MenuItem
-                        onClick={this.handleClose}
+                        onClick={this.handleViewProfile}
                         className="profile-option"
                       >
                         <AccountCircle className="profile-icon" />

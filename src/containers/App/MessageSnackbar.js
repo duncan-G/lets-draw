@@ -3,17 +3,16 @@ import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
-import ErrorIcon from '@material-ui/icons/Error';
+import MessageIcon from '@material-ui/icons/Message';
 
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 
-import { makeSelectAppError } from './selectors';
-import { resolveAppError } from './actions';
+import { makeSelectAppMessage } from './selectors';
+import { resolveAppMessage } from './actions';
 
-class ErrorSnackBar extends React.PureComponent {
+class MessageSnackBar extends React.PureComponent {
   handleClose(...args) {
-    console.log(args);
     this.props.resolveAppError();
   }
 
@@ -25,16 +24,15 @@ class ErrorSnackBar extends React.PureComponent {
             vertical: 'bottom',
             horizontal: 'center'
           }}
-          open={!!this.props.appError}
+          open={!!this.props.appMessage}
           autoHideDuration={6000}
-          onClose={this.props.resolveAppError}
+          onClose={this.props.resolveAppMessage}
         >
           <SnackbarContent
-            className="error-snackbar-content"
             message={
               <span className="snackbar-message">
-                <ErrorIcon className="snackbar-icon" />
-                {this.props.appError}
+                <MessageIcon className="snackbar-icon" />
+                {this.props.appMessage}
               </span>
             }
             action={[
@@ -42,7 +40,7 @@ class ErrorSnackBar extends React.PureComponent {
                 key="close"
                 aria-label="Close"
                 color="inherit"
-                onClick={this.props.resolveAppError}
+                onClick={this.props.resolveAppMessage}
               >
                 <CloseIcon />
               </IconButton>
@@ -56,14 +54,14 @@ class ErrorSnackBar extends React.PureComponent {
 
 const mapStateToProps = () =>
   createStructuredSelector({
-    appError: makeSelectAppError()
+    appMessage: makeSelectAppMessage()
   });
 
 const mapDistpatchToProps = dispatch => ({
-  resolveAppError: () => dispatch(resolveAppError())
+  resolveAppMessage: () => dispatch(resolveAppMessage())
 });
 
 export default connect(
   mapStateToProps,
   mapDistpatchToProps
-)(ErrorSnackBar);
+)(MessageSnackBar);

@@ -1,13 +1,14 @@
+
 .error-snackbar-content {
   background-color: orangered !important;
 }
 
-.error-message {
+.snackbar-message {
   display: flex;
   align-items: center;
 }
 
-.error-icon {
+.snackbar-icon {
   margin-right: 10px;
 }
 
@@ -66,7 +67,6 @@
   margin-bottom: 16px;
 }
 
-
 @media (max-width: 600px) {
   #auth-form-wrapper {
     padding: 16px;
@@ -85,10 +85,24 @@
 /* app pages */
 .app-page {
   width: 100%;
-  height: 100%;
+  padding: 16px;
+}
+
+.fixed {
   overflow: auto;
+  height: calc(100% - 64px);
+}
+.scrollable {
+  height: 100%;
+  overflow: scroll;
+}
+
+.aligned {
   display: flex;
+  align-items: center;
   justify-content: center;
+  min-height: 100%;
+  width: 100%;
 }
 
 .app-content {

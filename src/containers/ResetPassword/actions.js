@@ -2,7 +2,8 @@ import history from '../../utils/history';
 import {
   appError,
   resourceLoading,
-  resourceLoadingComplete
+  resourceLoadingComplete,
+  appMessage
 } from '../App/actions';
 import * as types from './constants';
 
@@ -24,6 +25,10 @@ export const resetTokenError = resetTokenError => ({
 export const changePasswordError = changePasswordError => ({
   type: types.CHANGE_PASSWORD_ERROR,
   changePasswordError
+});
+
+export const resolveChangePasswordError = () => ({
+  type: types.RESOLVE_CHANGE_PASSWORD_ERROR
 });
 
 export const resetTokenValid = email => ({
@@ -93,10 +98,16 @@ export const verifyToken = resetToken => {
 };
 
 export const changePassword = data => {
+  console.log(data);
   return dispatch => {
+    dispatch(resolveChangePasswordError());
     dispatch(resourceLoading());
 
-    fetch('/api/auth/reset-password', {
+    const url = data.oldPassword
+      ? '/api/auth/change-password'
+      : '/api/auth/reset-password';
+
+    fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -108,7 +119,12 @@ export const changePassword = data => {
         if (result.error) {
           dispatch(changePasswordError(result.error.message));
         } else {
-          history.push('/login');
+          dispatch(appMessage('Password succesfully changed'));
+          if (data.oldPassword) {
+            history.push('/');
+          } else {
+            history.push('/login');
+          }
         }
       })
       .catch(error => {

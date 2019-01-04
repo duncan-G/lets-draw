@@ -5,7 +5,7 @@ const initalState = fromJS({
   appLoading: false, // Application level loading indicator
   appError: false, // Application level errors
   appMessage: false, // Application level messages
-  currentUser: 'Duncan Gichimu'
+  currentUser: 'duncangichimu@gmail.com'
 });
 
 const appReducer = (state = initalState, action) => {

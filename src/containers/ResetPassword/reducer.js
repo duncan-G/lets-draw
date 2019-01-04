@@ -18,11 +18,13 @@ const resetPasswordReducer = (state = initalState, action) => {
     case types.RESET_TOKEN_SENT:
       return state.set('resetTokenSent', action.email);
     case types.RESET_TOKEN_ERROR:
-      return state.set('resetTokenError', action.resetTokenError)
+      return state.set('resetTokenError', action.resetTokenError);
     case types.CHANGE_PASSWORD_ERROR:
-      return state.set('changePasswordError', action.changePasswordError)
+      return state.set('changePasswordError', action.changePasswordError);
+    case types.RESOLVE_CHANGE_PASSWORD_ERROR:
+      return state.set('changePasswordError', false);
     case types.RESET_TOKEN_VALID:
-      return state.set('email', action.email)
+      return state.set('email', action.email);
     case types.UNSUBSCRIBE_STATE_CHANGES:
       return state
         .set('resetTokenSent', false)
